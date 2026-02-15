@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>B-TEAM Game Hub</title>
+
+<style>
+:root {
+    --bg: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+    --card: rgba(255,255,255,0.08);
+    --border: rgba(255,255,255,0.2);
+    --accent: #00ffc3;
+}
+
+*{box-sizing:border-box;}
+
+body{
+    margin:0;
+    font-family:Segoe UI,sans-serif;
+    background:var(--bg);
+    color:#fff;
+    display:flex;
+    flex-direction:column;
+    min-height:100vh;
+}
+
+header{
+    padding:50px 20px 20px;
+    text-align:center;
+}
+
+h1{
+    margin:0;
+    font-size:50px;
+    letter-spacing:4px;
+}
+
+.subtitle{
+    margin-top:10px;
+    opacity:.8;
+}
+
+main{
+    flex:1;
+    display:flex;
+    justify-content:center;
+    padding:30px;
+}
+
+.grid{
+    width:100%;
+    max-width:1200px;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:35px;
+}
+
+.card{
+    background:var(--card);
+    border:2px solid var(--border);
+    border-radius:22px;
+    padding:50px 20px;
+    text-align:center;
+    cursor:pointer;
+    transition:.25s;
+    font-size:22px;
+    position:relative;
+}
+
+.card:hover,.card.active{
+    transform:translateY(-6px);
+    border-color:var(--accent);
+    box-shadow:0 0 25px rgba(0,255,195,.4);
+}
+
+.card.done{
+    opacity:.6;
+}
+
+.title{
+    font-size:26px;
+    font-weight:bold;
+    margin-bottom:12px;
+}
+
+.author{
+    font-size:15px;
+    opacity:.7;
+}
+
+.done-badge{
+    position:absolute;
+    top:15px;
+    right:15px;
+    font-size:14px;
+    background:#00ffc3;
+    color:#000;
+    padding:4px 8px;
+    border-radius:10px;
+    display:none;
+}
+
+.card.done .done-badge{
+    display:block;
+}
+
+#overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.85);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    font-size:40px;
+    letter-spacing:4px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>🎮 Bチーム ミニゲーム集</h1>
+    <div class="subtitle">それぞれのゲームをご紹介！！</div>
+</header>
+
+<main>
+<div class="grid" id="grid">
+
+    <div class="card" tabindex="0" data-link="games/game-b/index.html">
+        <div class="done-badge">DONE</div>
+        <div class="title">GAME NAME</div>
+        <div class="author">USER NAME</div>
+    </div>
+
+    <div class="card" tabindex="0" data-link="games/game-c/index.html">
+        <div class="done-badge">DONE</div>
+        <div class="title">GAME NAME</div>
+        <div class="author">USER NAME</div>
+    </div>
+
+    <div class="card" tabindex="0" data-link="games/game-d/index.html">
+        <div class="done-badge">DONE</div>
+        <div class="title">GAME NAME</div>
+        <div class="author">USER NAME</div>
+    </div>
+
+    <div class="card" tabindex="0" data-link="games/BUG&VIRUS-DEFENCE/index.html">
+        <div class="done-badge">DONE</div>
+        <div class="title">BUG & VIRUS DEFENCE</div>
+        <div class="author">下村 作成</div>
+    </div>
+
+    <div class="card" tabindex="0" data-link="games/ORIGINAL-GACHA/index.html">
+        <div class="done-badge">DONE</div>
+        <div class="title">オリジナル10連ガチャ</div>
+        <div class="author">下村 作成</div>
+    </div>
+
+</div>
+</main>
+
+<div id="overlay">NOW LOADING...</div>
+
+<script>
+const cards=document.querySelectorAll(".card");
+const overlay=document.getElementById("overlay");
+let index=0;
+
+function setActive(i){
+    cards.forEach(c=>c.classList.remove("active"));
+    index=i;
+    cards[index].classList.add("active");
+    cards[index].focus();
+}
+
+function launch(card){
+    overlay.style.display="flex";
+    card.classList.add("done");
+    setTimeout(()=>location.href=card.dataset.link,300);
+}
+
+cards.forEach((card,i)=>{
+    card.addEventListener("click",()=>launch(card));
+    card.addEventListener("focus",()=>setActive(i));
+});
+
+document.addEventListener("keydown",e=>{
+    if(e.key==="ArrowRight"||e.key==="ArrowDown"){
+        setActive((index+1)%cards.length);
+    }
+    if(e.key==="ArrowLeft"||e.key==="ArrowUp"){
+        setActive((index-1+cards.length)%cards.length);
+    }
+    if(e.key==="Enter"){
+        launch(cards[index]);
+    }
+});
+</script>
+
+</body>
+</html>
