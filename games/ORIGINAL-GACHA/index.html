@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>オリジナル10連ガチャ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="./web/css/style.css">
+    <!-- Phaser -->
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.85.0/dist/phaser.js"></script>
+    <script type="module" src="./web/js/main-menu.js"></script>
+</head>
+
+<body>
+    <!-- 背景装飾 -->
+    <div class="bg-glow"></div>
+
+    <!-- トースト -->
+    <div id="toast"></div>
+
+    <div class="app">
+
+        <!-- メニュー -->
+        <section id="menu" class="screen active">
+            <div class="hero">
+                <h1 class="logo">オリジナル10連ガチャ</h1>
+                <p class="tagline">君だけの10連ガチャを作ろう！！</p>
+                <button id="main-btn" class="btn-ghost">メニューへ戻る</button>
+                <button id="start-btn" class="btn-primary">設定開始</button>
+            </div>
+        </section>
+
+        <!-- 設定 -->
+        <section id="setting" class="screen">
+            <div class="panel">
+                <div class="panel-header">
+                    <h2>ガチャ設定</h2>
+                </div>
+
+                <div id="rarity-container" class="rarity-grid"></div>
+
+                <div class="panel-footer">
+                    <button id="buck-btn" class="btn-ghost">戻る</button>
+                    <button id="next-btn" class="btn-primary">ガチャ開始</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Phaser -->
+        <div id="game-container" class="screen game"></div>
+    </div>
+</body>
+</html>
