@@ -118,6 +118,21 @@ class StartScene extends Phaser.Scene {
             fontSize: '24px',
             fill: '#ffffff'
         }).setOrigin(0.5);
+        const menuBtn = this.add.text(400, 520, '← メニューに戻る', {
+            fontSize: '24px',
+            fill: '#ffffff',
+            backgroundColor: '#333333'
+        })
+            .setOrigin(0.5)
+            .setPadding(16, 8)
+            .setInteractive({ useHandCursor: true })
+            .setDepth(10);
+        
+        menuBtn.on('pointerover', () => menuBtn.setStyle({ fill: '#00ffc3' }));
+        menuBtn.on('pointerout', () => menuBtn.setStyle({ fill: '#ffffff' }));
+        menuBtn.on('pointerdown', () => {
+            location.href = '../../index.html';
+        });
         this.input.keyboard.once('keydown-SPACE', () => {
             this.scene.start('GameScene');
         });
