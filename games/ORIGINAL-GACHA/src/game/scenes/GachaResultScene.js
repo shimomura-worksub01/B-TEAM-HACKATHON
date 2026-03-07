@@ -77,6 +77,22 @@ export class GachaResultScene extends BaseScene
     }
 
     setMotion() {
+        // 結果画像をまとめてプリロード（カクつき防止）
+        const results = GachaManager.lastResults;
+        for (let i = 0; i < GACHA_COUNT; i++) {
+            this.load.image(`img${i}`, results[i].image);
+        }
+
+        this.load.once("complete", () => {
+            // 結果表示タイマーはプリロード完了後に開始
+            this.time.addEvent({
+                delay: 600,
+                repeat: 9,
+                callback: () => this.reveal(),
+            });
+        });
+        this.load.start();
+
         // リング（モーション）
         this.tweens.add({
             targets: this.bgRing,
@@ -87,13 +103,6 @@ export class GachaResultScene extends BaseScene
 
         // フェードイン
         this.cameras.main.fadeIn(500);
-
-        // 結果表示
-        this.time.addEvent({
-            delay: 600,
-            repeat: 9,
-            callback: () => this.reveal(),
-        });
 
         // ガチャボタン（モーション）
         this.tweens.add({
@@ -209,8 +218,10 @@ export class GachaResultScene extends BaseScene
     reveal() {
         if (this.index >= GACHA_COUNT) return;
 
-        const r = GachaManager.lastResults[this.index];
-        const cardBack = this.cards[this.index];
+        const currentIndex = this.index;
+
+        const r = GachaManager.lastResults[currentIndex];
+        const cardBack = this.cards[currentIndex];
         const x = cardBack.x;
         const y = cardBack.y;
 
@@ -234,44 +245,39 @@ export class GachaResultScene extends BaseScene
             ease: "Sine.in",
             onComplete: () => {
 
+                if (this.index !== currentIndex) return;
+
                 cardBack.destroy();
 
-                this.load.image(`img${this.index}`, r.image);
+                const container = this.createCard(
+                    x,
+                    y,
+                    `img${currentIndex}`,
+                    r.rarity,
+                    this.targetWidth,
+                    this.targetHeight
+                );
 
-                this.load.once("complete", () => {
+                container.scaleX = 0;
 
-                    const container = this.createCard(
-                        x,
-                        y,
-                        `img${this.index}`,
-                        r.rarity,
-                        this.targetWidth,
-                        this.targetHeight
-                    );
-
-                    container.scaleX = 0;
-
-                    this.tweens.add({
-                        targets: container,
-                        scaleX: 1,
-                        duration: 250,
-                        ease: "Back.out"
-                    });
-
-                    this.index++;
-
-                    if (this.index === GACHA_COUNT - 1) {
-                        // スキップボタン非表示
-                        this.skipButton.setVisible(false);
-                    } else if (this.index >= GACHA_COUNT) {
-                        // メニューボタン表示
-                        this.menuButton.setVisible(true);
-                        // ガチャボタン表示
-                        this.gachaButton.setVisible(true);
-                    }
+                this.tweens.add({
+                    targets: container,
+                    scaleX: 1,
+                    duration: 250,
+                    ease: "Back.out"
                 });
 
-                this.load.start();
+                this.index++;
+
+                if (this.index === GACHA_COUNT - 1) {
+                    // スキップボタン非表示
+                    this.skipButton.setVisible(false);
+                } else if (this.index >= GACHA_COUNT) {
+                    // メニューボタン表示
+                    this.menuButton.setVisible(true);
+                    // ガチャボタン表示
+                    this.gachaButton.setVisible(true);
+                }
             }
         });
     }
@@ -445,41 +451,28 @@ export class GachaResultScene extends BaseScene
         // まだ表示していない分を登録
         for (let i = this.index; i < GACHA_COUNT; i++) {
             const r = results[i];
-            this.load.image(`skip_img_${i}`, r.image);
+            const cardBack = this.cards[i];
+            const x = cardBack.x;
+            const y = cardBack.y;
+
+            cardBack.destroy();
+
+            const container = this.createCard(
+                x,
+                y,
+                `img${i}`,
+                r.rarity,
+                this.targetWidth,
+                this.targetHeight
+            );
+
+            container.scaleX = 1;
         }
 
-        // 全登録完了後に一斉生成
-        this.load.once("complete", () => {
+        this.index = GACHA_COUNT;
 
-            for (let i = this.index; i < GACHA_COUNT; i++) {
-
-                const r = results[i];
-                const cardBack = this.cards[i];
-
-                const x = cardBack.x;
-                const y = cardBack.y;
-
-                cardBack.destroy();
-
-                const container = this.createCard(
-                    x,
-                    y,
-                    `skip_img_${i}`,
-                    r.rarity,
-                    this.targetWidth,
-                    this.targetHeight
-                );
-
-                container.scaleX = 1;
-            }
-
-            this.index = GACHA_COUNT;
-
-            this.skipButton.setVisible(false);
-            this.menuButton.setVisible(true);
-            this.gachaButton.setVisible(true);
-        });
-
-        this.load.start();
+        this.skipButton.setVisible(false);
+        this.menuButton.setVisible(true);
+        this.gachaButton.setVisible(true);
     }
 }
