@@ -312,18 +312,6 @@ button {
     background: rgba(255,255,255,0.05);
 }
 
-/* ===== メニューへ戻るボタン（トップ専用） ===== */
-#main-btn {
-    display: inline-block;
-    margin-bottom: 16px;
-    opacity: 0.8;
-}
-
-#main-btn:hover {
-    opacity: 1;
-    transform: translateY(-2px);
-}
-
 .hero button {
     display: block;
     margin: 10px auto;
@@ -332,6 +320,10 @@ button {
 
 /* ===== footer ===== */
 .site-footer {
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     position: fixed;
     bottom: 0;
     left: 0;
@@ -387,4 +379,8 @@ button {
     button {
         width: 100%;
     }
+
+    .app {
+        padding-bottom: 72px;
+      }
 }
